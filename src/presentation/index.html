@@ -1,0 +1,42 @@
+<html>
+<script>
+var req = new XMLHttpRequest();
+req.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(req.responseText);
+       document.body.innerHTML = req.responseText;
+    }
+};
+
+var method = 'GET';
+let action = 'list';
+var body = '';
+
+console.log(window.location.search);
+
+if( window.location.search ) {
+  let q = window.location.search.substring(1).split('&')
+    .map(x => x.split('='))
+    .reduce((a, c) => {
+      a[c[0]] = c[1];
+      return a;
+    }, {});
+    console.log(q);
+
+    if( q.post ) {
+      method = 'POST';
+      body = JSON.stringify(q);      
+    }
+
+
+    if( q.template )
+      action = q.template
+}
+
+
+req.open(method, "/mgmt/shared/as3-forms-lx/"+action, true);
+req.send(body);
+</script>
+<body>
+</body>
+</html>

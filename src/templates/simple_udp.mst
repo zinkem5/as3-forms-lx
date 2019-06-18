@@ -1,0 +1,41 @@
+{{!
+Simple UDP load balancer using the same port on client and server side.
+}}
+{
+  "class": "AS3",
+  "action": "deploy",
+  "declaration": {
+    "class": "ADC",
+    "schemaVersion": "3.0.0",
+    "id": "0123-4567-8910",
+    "label": "UDP_DNS_Sample",
+    "remark": "Sample of a UDP DNS Load Balancer Service",
+    "{{tenant_name}}": {
+      "class": "Tenant",
+      "{{application_name}}": {
+        "class": "Application",
+        "template": "udp",
+        "serviceMain": {
+          "class": "Service_UDP",
+          "virtualPort": {{virtual_port::number}},
+          "virtualAddresses": [
+            "{{virtual_address}}"
+          ],
+          "pool": "Pool1"
+        },
+        "Pool1": {
+          "class": "Pool",
+          "monitors": [
+            "icmp"
+          ],
+          "members": [
+            {
+              "servicePort": {{virtual_port::number}},
+              "serverAddresses": {{server_addresses::array}}
+            }
+          ]
+        }
+      }
+    }
+  }
+ }

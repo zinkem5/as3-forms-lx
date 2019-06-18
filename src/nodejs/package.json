@@ -1,0 +1,22 @@
+{
+  "name": "as3-forms-lx",
+  "version": "0.8.0",
+  "description": "auto-generated html forms and validated rest endpoints from as3 mustache templates",
+  "main": "templateWorker.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "as3",
+    "f5",
+    "rest",
+    "api"
+  ],
+  "author": "Matthew Zinke <m.zinke@f5.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^6.10.0",
+    "mustache": "^3.0.1",
+    "uuid": "^3.3.2"
+  }
+}
