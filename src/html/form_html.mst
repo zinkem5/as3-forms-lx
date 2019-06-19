@@ -111,6 +111,25 @@
       padding: 5px 0px 5px 5px;
       width: 400px;
     }
+    a {
+    background-color: {{CurrentLine}};
+    border-radius: 13px;
+    margin: 3px;
+    color: {{Foreground}};
+    }
+
+    a:hover {
+    cursor: pointer;
+    background-color: {{Selection}};
+    }
+
+    a:active {
+    color: {{Yellow}};
+    }
+
+    a:visited {
+      color: {{Foreground}};
+    }
   </style>
   <body>
     <div class="container">
@@ -144,13 +163,13 @@
         {{/application_name}}
         <input class="submit" type="submit" value="Submit">
       </form>
+      <div><a href="/iapps/as3-forms-lx/?list"><tt>Templates</tt></a></div>
+      <div><a href="/iapps/as3-forms-lx/?declaration"><tt>Applications</tt></a></div>
       </div>
       <div class="form_margin"></div>
     </div>
     <div style="position:absolute;bottom:0px;right:0px;z-index:-1;opacity:0.5;">
       <img src="AS3_Robot.png" height="255" />
     </div>
-    <div><a href="/iapps/as3-forms-lx/?list">Template List</a></div>
-    <div><a href="/iapps/as3-forms-lx/?declaration">Application List</a></div>
   </body>
 </html>

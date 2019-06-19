@@ -118,5 +118,8 @@
     </table>
     <div>
     <div><a href="/iapps/as3-forms-lx/?list">Template List</a></div>
+    <div style="position:absolute;bottom:0px;right:0px;z-index:-1;opacity:0.5;">
+      <img src="AS3_Robot.png" height="255" />
+    </div>
   </body>
 </html>
