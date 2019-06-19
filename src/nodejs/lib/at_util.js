@@ -99,7 +99,16 @@ ATRequest.prototype.declaration = function (tenant) {
     path: `/mgmt/shared/appsvcs/declare${t}`,
   };
 
-  return makeRequest(opts);
+  return makeRequest(opts).then((result) => {
+
+    if( result.status == 204)
+      result.body = {
+        "class":"ADC",
+        "schemaVersion":"3.11.0"
+      }
+    console.log('returning from as3 declaration GET',result);
+    return result;
+  });
 };
 
 ATRequest.prototype.declare = function (adc) {
@@ -113,7 +122,23 @@ ATRequest.prototype.declare = function (adc) {
     method: 'POST',
   };
 
-  return makeRequest(opts, adc);
+  return makeRequest(opts, adc)
+    .then((result) => {
+
+      if( result.status >= 400 ) {
+        if( result.body )
+          if( result.body.errors )
+            throw new Error(result.body.message + ":" + result.body.errors.join(', '));
+          else {
+            throw new Error(result.body.results.map(r => r.message + ":" + r.response));
+          }
+      }
+      if( !result.body.declaration && result.body.class !== 'ADC') {
+        throw new Error('report this to as3 team please' + JSON.stringify(result));
+      }
+      console.log('returning from as3 declare POST',result);
+      return result;
+    });
 };
 
 module.exports = {

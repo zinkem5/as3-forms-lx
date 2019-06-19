@@ -1,4 +1,3 @@
-const db = require('./json_interface.js');
 const HtmlTemplate = require('./html_engine.js').HtmlTemplate;
 
 const emoji = require('./emoji.json');

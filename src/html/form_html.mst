@@ -139,6 +139,9 @@
         </table>
         <input type="hidden" name="template" value="{{template_name}}"/>
         <input type="hidden" name="post" value="true"/>
+        {{#application_name}}
+        <input type="hidden" name="application_name" value="{{application_name}}"/>
+        {{/application_name}}
         <input class="submit" type="submit" value="Submit">
       </form>
       </div>
@@ -147,5 +150,7 @@
     <div style="position:absolute;bottom:0px;right:0px;z-index:-1;opacity:0.5;">
       <img src="AS3_Robot.png" height="255" />
     </div>
+    <div><a href="/iapps/as3-forms-lx/?list">Template List</a></div>
+    <div><a href="/iapps/as3-forms-lx/?declaration">Application List</a></div>
   </body>
 </html>

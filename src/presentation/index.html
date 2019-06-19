@@ -25,14 +25,25 @@ if( window.location.search ) {
 
     if( q.post ) {
       method = 'POST';
-      body = JSON.stringify(q);      
+      Object.keys(q).forEach(k => {
+        if( q[k] === 'on' )
+          q[k] = true;
+      });
+      body = JSON.stringify(q);
     }
 
+    if( q.hasOwnProperty('declaration') ) {
+      action = 'declaration'
+      console.log('woot!')
+    }
 
     if( q.template )
       action = q.template
-}
 
+    if( q.application_name && q.tenant_name && !q.template) {
+      action = `declaration/${q.tenant_name}/${q.application_name}`
+    }
+}
 
 req.open(method, "/mgmt/shared/as3-forms-lx/"+action, true);
 req.send(body);

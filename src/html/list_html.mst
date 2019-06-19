@@ -43,5 +43,6 @@
       <div class="link" onclick="window.location='./?template={{prop}}'">{{prop}}</div>
       {{/list_items}}
     </div>
+    <div><a href="/iapps/as3-forms-lx/?declaration">Application List</a></div>
   </body>
 </html>

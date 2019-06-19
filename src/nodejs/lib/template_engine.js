@@ -127,10 +127,9 @@ function TemplateEngine(template_name, template_text, schemaSet) {
   this.as3_view_schema = templateToSchema(this.as3_template, schemaSet);
   this._validate = ajv.compile(this.as3_view_schema);
 
-  const form_html_view = {
-    template_name: this.template_name,
-    template_description: this.template_description,
-    form_items: Object.keys(this.as3_view_schema.properties)
+  this.fillDefaults = () => {
+
+    return Object.keys(this.as3_view_schema.properties)
       .map((prop) => {
         const defn = this.as3_view_schema.properties[prop];
         const new_view = {
@@ -145,7 +144,15 @@ function TemplateEngine(template_name, template_text, schemaSet) {
           options: defn.enum || [],
         };
         return new_view;
-      }),
+      });
+  }
+
+  //this is difficult to deal with because it has a function in it
+  //hard to clone ... fix this, partials should be used
+  const form_html_view = {
+    template_name: this.template_name,
+    template_description: this.template_description,
+    form_items: this.fillDefaults(),
     item_form_element() {
       const emap = {
         'text/plain': `<textarea rows="4" cols="50" name="${this.name}" ${this.required}></textarea>`,
@@ -168,6 +175,8 @@ function TemplateEngine(template_name, template_text, schemaSet) {
   this.form_html = (targets) => {
     // const populated = Object.assign(form_html_view, { targets });
     // console.log('o', populated);
+    delete form_html_view.application_name;
+    form_html_view.form_items = this.fillDefaults();
     return form_html_template.render(form_html_view);
   };
   return this;
@@ -176,14 +185,20 @@ function TemplateEngine(template_name, template_text, schemaSet) {
 TemplateEngine.prototype.loadWithDefaults = function (defaults) {
   if (!defaults) throw new Error('TemplateEngine.loadWithDefaults: null defaults!');
   const app_form_view = this.form_html_view;
+  app_form_view.form_items = this.fillDefaults();
   app_form_view.form_items.forEach((e) => {
     e.value = defaults[e.name];
   });
+  console.log('lwd1', defaults);
+  console.log('lwd2', app_form_view);
+  app_form_view.application_name = defaults.application_name;
   app_form_view.targets = [defaults.target];
   // console.log(form_html_template.html_template);
   // console.log(app_form_view);
-  // console.log(defaults);
-  return form_html_template.render(app_form_view);
+  console.log('loadWithDefaults', defaults);
+  const app_edit_form = form_html_template.render(app_form_view);
+  console.log(app_edit_form);
+  return app_edit_form;
 };
 
 TemplateEngine.prototype.validate = function (input) {
@@ -193,7 +208,7 @@ TemplateEngine.prototype.validate = function (input) {
 };
 
 TemplateEngine.prototype.render = function (input) {
-  console.log(input);
+  console.log('templat render input', input);
   const view = Object.keys(this.as3_view_schema.properties).reduce((acc, key) => {
     // //console.log(key);
     const text = input[key];
@@ -216,14 +231,50 @@ TemplateEngine.prototype.render = function (input) {
     return acc;
   }, {
     template_name: this.template_name,
-    uuid: input.uuid || uuid().substring(0, 8),
   });
+
   Object.assign(view, input);
-  console.log(view);
-  console.log(this.as3_template);
-  const foo = Mustache.render(this.as3_template, view);
-  console.log(foo);
-  return foo;
+
+  if( !view.uuid || view.uuid === '')
+    view.uuid = uuid().substring(0, 8);
+
+  console.log('template view', view);
+  //console.log(this.as3_template);
+  console.log('uuid', view.uuid);
+  const text = Mustache.render(this.as3_template, view);
+  const as3 = JSON.parse(text);
+  console.log(text);
+  const _adc = as3.class === 'AS3' ? as3.declaration : as3;
+
+  Object.keys(_adc).filter(k => _adc[k].class === 'Tenant')
+    .forEach((k) => {
+      console.log('tenant', k);
+      Object.keys(_adc[k])
+        .filter(a => _adc[k][a].class === 'Application')
+        .forEach(a => {
+          console.log('The rendered application name is authoritative:', a);
+          if( !input.application_name )
+            input.application_name = a;
+
+          const as3_constants = Object.assign({
+            class: 'Constants',
+            application_name: a,
+            uuid: view.uuid,
+          }, input);
+
+          _adc[k][a].label = this.template_name;
+          _adc[k][a].constants = as3_constants;
+
+          console.log('_adc should have constants included')
+          console.log(_adc[k][a].constants)
+
+          if( input.application_name && a !== input.application_name ) {
+            _adc[k][input.application_name] = _adc[k][a]
+            delete _adc[k][a];
+          }
+        });
+    });
+  return as3;
 };
 
 module.exports = {
