@@ -207,9 +207,8 @@ provided template:
 Typestache also allows specification of custom types using JSON schema. Schema
 files can be placed into `/var/config/rest/iapps/as3-forms-lx/schemas`. Each
 file must have a `.json` extension and contain valid JSON schema. Schemas listed
-in the `definitions` will be made available.
-
-In the template, these types can be referenced between the colons in variables:
+in the `definitions` will be made available to templates using the following
+syntax:
 
 `name`:`schema_name`:`type`
 
