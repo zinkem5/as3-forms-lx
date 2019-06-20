@@ -124,13 +124,17 @@ ATRequest.prototype.declare = function (adc) {
 
   return makeRequest(opts, adc)
     .then((result) => {
-
+      console.log(result);
       if( result.status >= 400 ) {
         if( result.body )
           if( result.body.errors )
             throw new Error(result.body.message + ":" + result.body.errors.join(', '));
           else {
-            throw new Error(result.body.results.map(r => r.message + ":" + r.response));
+            try {
+              throw new Error(result.body.results.map(r => r.message + ":" + r.response));
+            } catch (e) {
+              throw new Error(result.body);
+            }
           }
       }
       if( !result.body.declaration && result.body.class !== 'ADC') {

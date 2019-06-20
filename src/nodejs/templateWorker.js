@@ -312,9 +312,6 @@ TemplateWorker.prototype.onPost = function(restOperation) {
         if( !response.body.results )
           throw new Error('Report this irregular AS3 result:' + JSON.stringify(response.body, null, 2));
 
-        if( response.body.results )
-          response.body.results.push('iControl LX wont let me return HTML in a POST response.')
-
         const view = {
           table_rows: response.body.results || response.body,
         };

@@ -1,5 +1,8 @@
 const fs = require('fs');
 const Mustache = require('mustache');
+
+const HTML_ROOT_DIR = process.AFL_HE_ROOT_DIR || '/var/config/rest/iapps/as3-forms-lx/html/'
+
 // style
 const solarized_colors = {
   Base03: '#002b36',
@@ -145,9 +148,9 @@ const applyColors = function (view) {
 };
 
 // used for rendering application views
-function HtmlTemplate(name) {
+function HtmlTemplate(name, p) {
   this.name = name;
-  this.html_template = fs.readFileSync(`/var/config/rest/iapps/as3-forms-lx/html/${name}.mst`).toString('utf8');
+  this.html_template = fs.readFileSync(`${HTML_ROOT_DIR}${name}.mst`).toString('utf8');
   return this;
 }
 

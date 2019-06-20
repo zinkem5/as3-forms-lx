@@ -189,15 +189,15 @@ TemplateEngine.prototype.loadWithDefaults = function (defaults) {
   app_form_view.form_items.forEach((e) => {
     e.value = defaults[e.name];
   });
-  console.log('lwd1', defaults);
-  console.log('lwd2', app_form_view);
+  // console.log('lwd1', defaults);
+  // console.log('lwd2', app_form_view);
   app_form_view.application_name = defaults.application_name;
   app_form_view.targets = [defaults.target];
   // console.log(form_html_template.html_template);
   // console.log(app_form_view);
-  console.log('loadWithDefaults', defaults);
+  // console.log('loadWithDefaults', defaults);
   const app_edit_form = form_html_template.render(app_form_view);
-  console.log(app_edit_form);
+  // console.log(app_edit_form);
   return app_edit_form;
 };
 
