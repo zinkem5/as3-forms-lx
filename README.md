@@ -58,7 +58,7 @@ Types are provided in schema files, specified in a subset of JSON schema. This
 type information can be consumed and used to auto-generate a front end for the
 templates.
 
-**Basic Rules**
+###Basic Rules
 
 * Variables will be marked for replacement at render time.
 * Variables are surrounded with double curly braces, `{{` and `}}`.
@@ -68,8 +68,10 @@ templates.
   * text (for strings with newlines and escape characters)
   * number
   * boolean
+  * array (treated as array of strings, see [extended types](#extended-types)
+    for other arrays)
 
-**Example**
+###Example
 
 The following is an example of a simple Typestache template that will render an
 AS3 declaration:
@@ -199,3 +201,52 @@ provided template:
   }
 }
 ```
+
+### Extended Types
+
+Typestache also allows specification of custom types using JSON schema. Schema
+files can be placed into `/var/config/rest/iapps/as3-forms-lx/schemas`. Each
+file must have a `.json` extension and contain valid JSON schema. Schemas listed
+in the `definitions` will be made available.
+
+In the template, these types can be referenced between the colons in variables:
+
+`name`:`schema_name`:`type`
+
+* **name** is the name of the variable, as before
+* **schema_name** is the name of the JSON schema file, excluding the extension
+* **type** is the property name of the definition being referenced
+
+for example,
+```
+...
+{
+  "class": {{service_type:f5:service}}
+  ...
+}
+...
+```
+AFL has support for `enums` and custom formats can be applied to the primitive
+types outlined in the previous section. The variable in the example is a
+`service` type from the `f5` schema named `service_type`. The `service` schema
+is an enum containing the AS3 basic services, `Service_HTTP`, `Service_HTTPS`,
+`Service_L4`, `Service_UDP`, and `Service_TCP`.
+
+The definition from f5.json:
+```
+"service": {
+  "type": "string",
+  "enum": [
+    "Service_HTTP",
+    "Service_HTTPS",
+    "Service_TCP",
+    "Service_UDP",
+    "Service_L4"
+  ],
+  "default": "Service_HTTP"
+},
+```
+
+Arrays of primitives should work fine, but has not been tested extensively.
+
+Objects are not supported yet.
