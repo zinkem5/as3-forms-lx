@@ -127,13 +127,16 @@ ATRequest.prototype.declare = function (adc) {
       console.log(result);
       if( result.status >= 400 ) {
         if( result.body )
-          if( result.body.errors )
+          if( result.body.errors ) {
             throw new Error(result.body.message + ":" + result.body.errors.join(', '));
-          else {
+          } if( result.body.results ) {
+            throw new Error(JSON.stringify(result.body.results.map(r => r.message + ":" + r.response)));
+          } else {
             try {
               throw new Error(result.body.results.map(r => r.message + ":" + r.response));
             } catch (e) {
-              throw new Error(result.body);
+
+              throw new Error('$$$$$'+JSON.stringify(result.body)+'$$$$$');
             }
           }
       }

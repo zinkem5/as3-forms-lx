@@ -1,10 +1,67 @@
 <html>
 <script>
+
+function addEntry(element, name) {
+const pe = element.parentElement;
+const newinput = document.createElement('input');
+newinput.type = "text";
+newinput.name = name;
+
+const newdiv = document.createElement('div');
+newdiv.className = "p_input";
+newdiv.appendChild(newinput);
+pe.insertBefore(newdiv, pe.lastElementChild);
+
+}
+
+
 var req = new XMLHttpRequest();
 req.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      console.log(req.responseText);
+        console.log(req.responseText);
+      try {
+        const data = JSON.parse(req.responseText);
+
+        if( data.tenant_name ) {
+          console.log('found data.tenant_name');
+          document.body.innerHTML = `
+            <h1><tt><a href="/iapps/as3-forms-lx/?application_name=${data.application_name}&tenant_name=${data.tenant_name}">${data.tenant_name}/${data.application_name}</a></tt></h1>
+            <h1>${data.results.map(r => r.tenant + ' ' + r.message).join('<br/>')}</h1>
+            <div><a href="/iapps/as3-forms-lx/?list"><tt>Templates</tt></a></div>
+            <div><a href="/iapps/as3-forms-lx/?declaration"><tt>Applications</tt></a></div>
+          `;
+        } else if (data.body) {
+          console.log('found data.body');
+          let q = window.location.search.substring(1).split('&')
+            .map(x => x.split('='))
+            .reduce((a, c) => {
+              a[c[0]] = c[1];
+              return a;
+            }, {});
+
+          document.body.innerHTML = `
+            <h1><tt>DELETE ${q.tenant_name}/${q.application_name}</tt></h1>
+            <h1>${data.body.results.map(r => r.tenant + ' ' + r.message).join('<br/>') }</h1>
+            <div><a href="/iapps/as3-forms-lx/?list"><tt>Templates</tt></a></div>
+            <div><a href="/iapps/as3-forms-lx/?declaration"><tt>Applications</tt></a></div>
+          `;
+        } else {
+          console.log('else ... why?');
+          document.body.innerHTML = `
+          <h1>Error: ${data.code}</h1>
+          <h2>
+          <tt>${data.message}</tt>
+          <br/>
+          <br/>
+          <div><a href="/iapps/as3-forms-lx/?list"><tt>Templates</tt></a></div>
+          <div><a href="/iapps/as3-forms-lx/?declaration"><tt>Applications</tt></a></div>
+          `;
+        }
+
+      } catch(e) {
+        console.log(e);
        document.body.innerHTML = req.responseText;
+     }
     }
 };
 
@@ -34,13 +91,15 @@ if( window.location.search ) {
 
     if( q.hasOwnProperty('declaration') ) {
       action = 'declaration'
-      console.log('woot!')
     }
 
     if( q.template )
       action = q.template
 
-    if( q.application_name && q.tenant_name && !q.template) {
+    if( q.delete ) {
+      action = `${q.tenant_name}/${q.application_name}`
+      method = 'DELETE';
+    } else if( q.application_name && q.tenant_name && !q.template) {
       action = `declaration/${q.tenant_name}/${q.application_name}`
     }
 }

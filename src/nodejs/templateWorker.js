@@ -15,7 +15,7 @@ const FsTemplateProvider = template_provider.FsTemplateProvider;
 const html_engine = require('./lib/html_engine.js');
 const HtmlTemplate = html_engine.HtmlTemplate;
 
-const configPath = '/var/config/rest/iapps/as3-forms-lx';
+const configPath = process.AFL_TW_ROOT || '/var/config/rest/iapps/as3-forms-lx';
 
 function TemplateWorker() {
     this.state = {};
@@ -126,8 +126,8 @@ const as3_html_view = (response) => {
         {{^constants}}
         <div style="flex-grow: 1;text-align:right;">{{serviceMain.class}}</div>
         {{/constants}}
-        <div>{{serviceMain.virtualAddresses[0]}}</div>
-        <div>{{serviceMain.virtualport}}</div>
+        <div><a href="?delete=on&application_name={{aname}}&tenant_name={{tname}}">DELETE</a></div>
+
       </div>
     </div>
     `,
@@ -165,10 +165,21 @@ TemplateWorker.prototype.onGet = function(restOperation) {
         restOperation.setBody(list_html(list_html_view));
         this.completeRestOperation(restOperation);
       }).catch((e) => {
-        restOperation.setBody({
-          code: 500,
-          message: e.stack,
-        })
+        try {
+          const msg = JSON.parse(e.message);
+          restOperation.setBody({
+            code: 422,
+            message: e.message,
+          });
+        } catch (_e) {
+          this.logger.log(_e.message);
+
+          restOperation.setBody({
+            code: 500,
+            message: e.stack,
+            well: _e.message,
+          })
+        }
         this.completeRestOperation(restOperation);
       });
     }
@@ -250,6 +261,7 @@ TemplateWorker.prototype.onPost = function(restOperation) {
     this.logger.info(template_name);
     // console.log('POST Template task '+req.params.template);
     var app_names = [];
+    var tenant_name = '';
     const as3Req = new ATRequest({
       ipaddress: 'localhost',
       username: 'admin',
@@ -272,9 +284,9 @@ TemplateWorker.prototype.onPost = function(restOperation) {
         const _existing = declaration[1].body;
         this.logger.info('post-render');
         //console.log('new')
-        //console.log(_new)
+        console.log('new', _new)
         //console.log('existing')
-        //console.log(_existing)
+        console.log('existing', _existing)
         // grab ADC class
         const _final = _existing.class === 'AS3' ? _existing.declaration : _existing;
         const _newadc = _new.class === 'AS3' ? _new.declaration : _new;
@@ -289,13 +301,19 @@ TemplateWorker.prototype.onPost = function(restOperation) {
           if( !_newadc[k] )
             delete _final[k];
         });
-        console.log('before', _final);
+        console.log('before fin', _final);
+        console.log('before adc', _newadc);
+        console.log('keys', Object.keys(_newadc));
+        console.log('keys', Object.keys(_newadc).filter(k => _newadc[k].class === 'Tenant'));
         Object.keys(_newadc)
           .filter(k => _newadc[k].class === 'Tenant')
           .forEach((k) => {
             this.logger.info('stitching '+k);
             this.logger.info(JSON.stringify(_newadc[k]));
-            app_names.push(Object.keys(_newadc[k]).filter(x => x.class === 'Application'));
+            console.log('stitch', Object.keys(_newadc[k]));
+            tenant_name = k;
+            app_names.push(Object.keys(_newadc[k]).filter(x => x !== 'class')[0]);
+            console.log(app_names);
             if (_final[k])
               Object.assign(_final[k], _newadc[k]);
             else
@@ -321,16 +339,28 @@ TemplateWorker.prototype.onPost = function(restOperation) {
         const list_base = new HtmlTemplate('partial_html');
         const response_view = list_base.render(view, partial);
         restOperation.setBody({
-          application_name: JSON.stringify(app_names),
-          reuslts: response.body.results.filter(x => x.tenant)
+          tenant_name: tenant_name,
+          application_name: app_names[0],
+          results: response.body.results.filter(x => x.tenant)
         });
         this.completeRestOperation(restOperation);
       }).catch((e) => {
         console.log(e.stack);
-        restOperation.setBody({
-          code: 500,
-          message: e.stack,
-        })
+        try {
+          const msg = JSON.parse(e.message);
+          restOperation.setBody({
+            code: 422,
+            message: e.message,
+          });
+        } catch (_e) {
+          this.logger.log(_e.message);
+
+          restOperation.setBody({
+            code: 500,
+            message: e.stack,
+            well: _e.message,
+          })
+        }
         this.completeRestOperation(restOperation);
       });
 };
@@ -349,8 +379,48 @@ TemplateWorker.prototype.onPatch = function(restOperation) {
 
 // delete template file
 TemplateWorker.prototype.onDelete = function(restOperation) {
-    this.state = {};
-    this.completeRestOperation(restOperation.setBody(this.state));
+    const uri = restOperation.getUri();
+    this.logger.info(uri);
+    const path_elements = uri.path.split('/');
+    const tenant = path_elements[3];
+    const app = path_elements[4];
+    const as3req = new ATRequest({
+      ipaddress: 'localhost',
+      username: 'admin',
+      password: '',
+      port: 8100
+    })
+    return as3req.declaration()
+      .then((response) => {
+        console.log('DELETE GET', response);
+        const declaration = response.body.declaration || response.body;
+        delete declaration[tenant][app];
+        return as3req.declare(declaration);
+      })
+      .then((result)=>{
+        restOperation.setBody(result);
+        this.completeRestOperation(restOperation);
+      })
+      .catch((e) => {
+        console.log(e.stack);
+        try {
+          const msg = JSON.parse(e.message);
+          restOperation.setBody({
+            code: 422,
+            message: e.message,
+          });
+        } catch (_e) {
+          this.logger.log(_e.message);
+
+          restOperation.setBody({
+            code: 500,
+            message: e.stack,
+            well: _e.message,
+          })
+        }
+        this.completeRestOperation(restOperation);
+      });
+
 };
 
 module.exports = TemplateWorker;
