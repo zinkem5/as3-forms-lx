@@ -6,8 +6,8 @@
       "default": "10.0.0.1"
     },
     "port": {
-      "type": "number",
-      "minimuim": 1,
+      "type": "integer",
+      "minimuim": 0,
       "maximum": 65535,
       "default": 443
     },

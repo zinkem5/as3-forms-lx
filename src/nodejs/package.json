@@ -1,6 +1,6 @@
 {
   "name": "as3-forms-lx",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "description": "auto-generated html forms and validated rest endpoints from as3 mustache templates",
   "main": "templateWorker.js",
   "scripts": {

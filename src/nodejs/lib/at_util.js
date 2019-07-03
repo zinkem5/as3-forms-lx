@@ -17,6 +17,12 @@ function ATRequest(device) {
 }
 
 const makeRequest = (opts, body) => new Promise((resolve, reject) => {
+
+  const payload = body ? JSON.stringify(body) : null;
+  opts.headers = { 'Content-Type': 'application/json' };
+  if(payload)
+    opts.headers['Content-Length'] = payload.length;
+
   const req = https.request(opts, (res) => {
     const buffer = [];
     res.setEncoding('utf8');
@@ -25,7 +31,9 @@ const makeRequest = (opts, body) => new Promise((resolve, reject) => {
     });
     res.on('end', () => {
       const raw_body = buffer.join('');
-
+      console.log(res.statusCode);
+      console.log(res.headers);
+      console.log(raw_body);
       const json_body = (() => {
         if (res.statusCode === 204) return '';
         try {
@@ -56,7 +64,7 @@ const makeRequest = (opts, body) => new Promise((resolve, reject) => {
     reject(new Error(`${opts.host}:${e.message}`));
   });
 
-  if (body) req.write(JSON.stringify(body));
+  if (body) req.write(payload);
 
   req.end();
 });
