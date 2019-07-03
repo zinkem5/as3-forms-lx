@@ -67,6 +67,7 @@ templates.
   * string (default)
   * text (for strings with newlines and escape characters)
   * number
+  * integer
   * boolean
   * array (treated as array of strings, see [extended types](#extended-types)
     for other arrays)
@@ -97,7 +98,7 @@ AS3 declaration:
           ],
           "members": [
             {
-              "servicePort": {{port::number}},
+              "servicePort": {{port::integer}},
               "serverAddresses": {{server_addresses::array}}
             }
           ]
@@ -125,7 +126,7 @@ The following schema will get auto-generated from the example:
       "type": "array"
     },
     "port" : {
-      "type": "number"
+      "type": "integer"
     },
   }
 }
@@ -163,7 +164,7 @@ representation of that variable. The view is filled in to provide this behavior.
   "server_addresses" : "[ \"10.0.1.1\", \"10.0.2.2\" ]",
   "server_addresses::array" : [ "10.0.1.1", "10.0.2.2" ],
   "port" : "80",
-  "port::number" : 80
+  "port::integer" : 80
 }
 ```
 

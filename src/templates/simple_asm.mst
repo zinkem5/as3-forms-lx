@@ -1,6 +1,6 @@
 {{!
   This is a simple HTTP server hosted at port 80 using the existing ASM policy
-  specified by WAF policy path.
+  specified by WAF policy path. Uses the AS3 http template.
 }}
 {
   "class": "ADC",
@@ -31,7 +31,7 @@
         ],
         "members": [
           {
-            "servicePort": {{server_port::number}},
+            "servicePort": {{server_port::integer}},
             "serverAddresses": {{server_addresses::array}}
           }
         ]

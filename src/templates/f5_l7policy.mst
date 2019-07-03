@@ -21,7 +21,7 @@
           "virtualAddresses": [
             "{{virtual_address}}"
           ],
-          "virtualPort": {{virtual_port::number}},
+          "virtualPort": {{virtual_port:f5:port}},
           "pool": "POOL_Service_HTTP_{{virtual_port}}"
         },
         "POOL_Service_HTTP_{{virtual_port}}": {

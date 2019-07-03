@@ -1,5 +1,7 @@
 {{!
   Using an endpoint policy, route to a different pool based on path.
+
+  <b>DOES NOT WORK<b>
 }}
 {
   "class": "AS3",

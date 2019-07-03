@@ -64,6 +64,7 @@ const templateToSchema = (template, schema) => ((props) => {
           'array',
           'number',
           'string',
+          'integer',
         ];
 
         new_def = { type: 'string' };
@@ -81,7 +82,8 @@ const templateToSchema = (template, schema) => ((props) => {
         new_def.default = (() => {
           if (new_def.type === 'array') return ['10.0.1.1'];
           if (new_def.type === 'boolean') return true;
-          if (new_def.type === 'number') return 131;
+          if (new_def.type === 'number' ||
+              new_def.type === 'integer' ) return 131;
           return 'myComponent';
         })(param);
 

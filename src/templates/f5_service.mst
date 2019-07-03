@@ -20,15 +20,15 @@
         "VIP_{{service_type}}_{{virtual_port}}": {
           "class": {{service_type:f5:service}},
           "virtualAddresses": [
-            "{{virtual_address}}"
+            "{{virtual_address:f5:ipv4}}"
           ],
-          "virtualPort": {{virtual_port::number}},
+          "virtualPort": {{virtual_port:f5:port}},
           "pool": "POOL_{{service_type}}_{{virtual_port}}"
         },
         "POOL_{{service_type}}_{{virtual_port}}": {
           "class": "Pool",
           "members": [{
-            "servicePort": {{virtual_port}},
+            "servicePort": {{service_port:f5:port}},
             "serverAddresses": {{server_addresses::array}}
           }]
         }

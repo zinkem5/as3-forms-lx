@@ -21,13 +21,13 @@
           "virtualAddresses": [
             "{{virtual_address}}"
           ],
-          "virtualPort": {{virtual_port::number}},
+          "virtualPort": {{virtual_port::integer}},
           "pool": "svc_pool"
         },
         "svc_pool": {
           "class": "Pool",
           "members": [{
-            "servicePort": {{virtual_port::number}},
+            "servicePort": {{virtual_port::integer}},
             "serverAddresses": {{server_addresses::array}}
           }]
         }

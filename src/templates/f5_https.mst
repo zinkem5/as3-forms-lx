@@ -21,14 +21,14 @@
           "virtualAddresses": [
             "{{virtual_address}}"
           ],
-          "virtualPort": {{virtual_port::number}},
+          "virtualPort": {{virtual_port:f5:port}},
           "pool": "POOL_Service_HTTPS_{{virtual_port}}",
           "serverTLS": "TLS_Service_HTTPS_{{virtual_port}}"
         },
         "POOL_Service_HTTPS_{{virtual_port}}": {
           "class": "Pool",
           "members": [{
-            "servicePort": {{virtual_port}},
+            "servicePort": {{service_port:f5:port}},
             "serverAddresses": {{server_addresses::array}}
           }]
         },

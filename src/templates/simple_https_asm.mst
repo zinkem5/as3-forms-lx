@@ -32,7 +32,7 @@
             "http"
           ],
           "members": [{
-            "servicePort": {{server_port::number}},
+            "servicePort": {{service_port::integer}},
             "serverAddresses": {{server_address::array}}
           }]
         },
