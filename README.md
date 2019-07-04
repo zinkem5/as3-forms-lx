@@ -58,7 +58,7 @@ Types are provided in schema files, specified in a subset of JSON schema. This
 type information can be consumed and used to auto-generate a front end for the
 templates.
 
-###Basic Rules
+### Basic Rules
 
 * Variables will be marked for replacement at render time.
 * Variables are surrounded with double curly braces, `{{` and `}}`.
@@ -72,7 +72,7 @@ templates.
   * array (treated as array of strings, see [extended types](#extended-types)
     for other arrays)
 
-###Example
+### Example
 
 The following is an example of a simple Typestache template that will render an
 AS3 declaration:
@@ -208,9 +208,8 @@ provided template:
 Typestache also allows specification of custom types using JSON schema. Schema
 files can be placed into `/var/config/rest/iapps/as3-forms-lx/schemas`. Each
 file must have a `.json` extension and contain valid JSON schema. Schemas listed
-in the `definitions` will be made available.
-
-In the template, these types can be referenced between the colons in variables:
+in the `definitions` will be made available to templates using the following
+syntax:
 
 `name`:`schema_name`:`type`
 
