@@ -1,5 +1,6 @@
 {{!
 Simple UDP load balancer using the same port on client and server side.
+Uses AS3 template: udp.
 }}
 {
   "class": "AS3",
@@ -17,10 +18,10 @@ Simple UDP load balancer using the same port on client and server side.
         "template": "udp",
         "serviceMain": {
           "class": "Service_UDP",
-          "virtualPort": {{virtual_port::integer}},
           "virtualAddresses": [
             "{{virtual_address}}"
           ],
+          "virtualPort": {{virtual_port::integer}},
           "pool": "Pool1"
         },
         "Pool1": {
@@ -30,8 +31,8 @@ Simple UDP load balancer using the same port on client and server side.
           ],
           "members": [
             {
-              "servicePort": {{service_port::integer}},
-              "serverAddresses": {{server_addresses::array}}
+              "serverAddresses": {{server_addresses::array}},
+              "servicePort": {{service_port::integer}}
             }
           ]
         }

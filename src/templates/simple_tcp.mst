@@ -1,5 +1,6 @@
 {{!
  Simple TCP load balancer using the same port on client and server side.
+ Uses AS3 template: tcp.
 }}
 {
   "class": "AS3",
@@ -27,8 +28,8 @@
         "svc_pool": {
           "class": "Pool",
           "members": [{
-            "servicePort": {{virtual_port::integer}},
-            "serverAddresses": {{server_addresses::array}}
+            "serverAddresses": {{server_addresses::array}},
+            "servicePort": {{service_port::integer}}
           }]
         }
       }

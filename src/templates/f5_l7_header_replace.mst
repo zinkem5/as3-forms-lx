@@ -29,8 +29,8 @@
         "POOL_Service_HTTP_{{virtual_port}}": {
           "class": "Pool",
           "members": [{
-            "servicePort": {{virtual_port:f5:port}},
-            "serverAddresses": {{server_addresses::array}}
+            "serverAddresses": {{server_addresses::array}},
+            "servicePort": {{service_port:f5:port}}
           }]
         },
         "EP_Service_HTTP_{{virtual_port}}" : {

@@ -18,31 +18,11 @@ const run_template = async (template_name, context) => {
   if (err) throw err;
   //outfile.write('view', context);
   const rendered = engine.render(context);
-  //outfile.write(rendered);
+  outfile.write(rendered);
   return rendered;
 }
 
 const input_map = {
-  delete_tenant : {
-    "tenant_name": "myTenant"
-  },
-  https_asm_ts : {
-    server_address: [ '1.2.3.4' ],
-    certificate: 'foo\nbar',
-    uuid: '1234-5678-9101',
-    tenant_name: 'tenant1',
-    application_name: 'app1',
-    virtual_address: '0.0.0.0',
-    private_key: 'foo\nbar\nbaz\boo'
-  },
-  multi_tier_app : {
-    uuid: '3456',
-    tenant_name: 'zinke',
-    application_name: 'app2',
-    virtual_address: '3.6.7.8',
-    service_port: 40,
-    server_addresses: '2.3.4.5'
-  },
   simple_asm : {
     uuid: '3456',
     tenant_name: 'zinke',
@@ -107,26 +87,13 @@ const input_map = {
     virtual_port: 40,
     server_addresses: '2.3.4.5'
   },
-  simple_websocket : {
-    uuid: '3456',
-    tenant_name: 'zinke',
-    application_name: 'app2',
-    virtual_address: '3.6.7.8',
-    server_addresses: '2.3.4.5'
-  },
-  telemetry_streaming: {
-    uuid: '3456',
-    tenant_name: 'zinke',
-    application_name: 'app2',
-    virtual_address: '3.6.7.8',
-    server_addresses: '2.3.4.5'
-  },
   f5_service: {
     service_type: 'Service_HTTP',
     tenant_name: 'zinke',
     virtual_address: '3.6.7.8',
     virtual_port: 40,
     server_addresses: [ '2.3.4.5' ],
+    service_port: 55,
   },
   f5_https: {
     service_type: 'Service_HTTP',

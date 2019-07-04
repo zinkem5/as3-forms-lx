@@ -1,6 +1,5 @@
 {{!
- Simple load balancer using the same port on client and server side with
- a choice of protocol between HTTP, UDP, TCP, and L4.
+ Simple load balancer with a choice of protocol between HTTP, UDP, TCP, and L4.
 }}
 {
   "class": "AS3",
@@ -20,7 +19,7 @@
         "VIP_{{service_type}}_{{virtual_port}}": {
           "class": {{service_type:f5:service}},
           "virtualAddresses": [
-            "{{virtual_address:f5:ipv4}}"
+            {{virtual_address:f5:ipv4}}
           ],
           "virtualPort": {{virtual_port:f5:port}},
           "pool": "POOL_{{service_type}}_{{virtual_port}}"
@@ -28,8 +27,8 @@
         "POOL_{{service_type}}_{{virtual_port}}": {
           "class": "Pool",
           "members": [{
-            "servicePort": {{service_port:f5:port}},
-            "serverAddresses": {{server_addresses::array}}
+            "serverAddresses": {{server_addresses::array}},
+            "servicePort": {{service_port:f5:port}}
           }]
         }
       }

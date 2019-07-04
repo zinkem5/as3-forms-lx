@@ -1,6 +1,6 @@
 {{!
   The simplest example of an HTTP server load balanced to other servers at
-  port 80.
+  port 80. Uses AS3 template: http.
 }}
 {
   "class": "AS3",

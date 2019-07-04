@@ -1,5 +1,6 @@
 {{!
   Simplest example of an HTTPS application hosted at post 443.
+  Uses AS3 template: https.
 }}
 {
   "class": "AS3",

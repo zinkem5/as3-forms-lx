@@ -1,6 +1,6 @@
 {{!
   Apply an existing ASM policy at the path specified by WAF_policy_path to an
-  https server hosted on port 443.
+  https server hosted on port 443. Uses AS3 template: https.
 }}
 {
   "class": "AS3",

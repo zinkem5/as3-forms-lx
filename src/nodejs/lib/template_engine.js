@@ -244,7 +244,14 @@ TemplateEngine.prototype.render = function (input) {
   //console.log(this.as3_template);
   console.log('uuid', view.uuid);
   const text = Mustache.render(this.as3_template, view);
-  const as3 = JSON.parse(text);
+  const as3 = (() => {
+      try {
+        return JSON.parse(text);
+      } catch(e) {
+        console.log(text);
+        throw new Error(['Rendered template is not valid jason'+this.template_name, JSON.stringify(view), text].join('\n'))
+      }
+  })();
   console.log(text);
   const _adc = as3.class === 'AS3' ? as3.declaration : as3;
 

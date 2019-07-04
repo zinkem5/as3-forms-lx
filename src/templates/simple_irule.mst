@@ -1,5 +1,6 @@
 {{!
 Deploy an HTTP server with an iRule attached. Uses port 80 on client and server side.
+Uses AS3 template: http.
 }}
 {
   "class": "ADC",

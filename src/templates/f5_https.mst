@@ -28,8 +28,8 @@
         "POOL_Service_HTTPS_{{virtual_port}}": {
           "class": "Pool",
           "members": [{
-            "servicePort": {{service_port:f5:port}},
-            "serverAddresses": {{server_addresses::array}}
+            "serverAddresses": {{server_addresses::array}},
+            "servicePort": {{service_port:f5:port}}
           }]
         },
         "TLS_Service_HTTPS_{{virtual_port}}": {

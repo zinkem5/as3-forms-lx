@@ -1,6 +1,6 @@
 {{!
   Using an endpoint policy, route to a different pool based on path.
-
+  Uses AS3 template: http.
   <b>DOES NOT WORK<b>
 }}
 {
