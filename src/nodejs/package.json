@@ -15,7 +15,7 @@
   "author": "Matthew Zinke <m.zinke@f5.com>",
   "license": "MIT",
   "dependencies": {
-    "ajv": "^6.10.0",
+    "ajv": "^6.12.3",
     "mustache": "^3.0.1",
     "uuid": "^3.3.2"
   }
