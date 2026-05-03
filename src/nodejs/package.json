@@ -17,6 +17,6 @@
   "dependencies": {
     "ajv": "^6.10.0",
     "mustache": "^3.0.1",
-    "uuid": "^3.3.2"
+    "uuid": "^14.0.0"
   }
 }
